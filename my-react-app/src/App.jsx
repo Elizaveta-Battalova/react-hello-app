@@ -5,78 +5,72 @@ import './App.css'
 
 function App() {
 const [name, setName] = useState('');
+const [message, setMessage] = useState('')
+
 const [age, setAge] = useState('');
+const [messageAge, setMessageAge] = useState('');
+
 const [apples, setApples] = useState('');
-const [friends, setFriends] = useState('');
+const [friends,setFriends] = useState('');
+const [friendMessage, setFriendMessage] = useState('')
 
-const [nameMessage, setNameMessage] = useState('');
-const [ageMessage, setAgeMessage] = useState('');
-const [calculateMessage, setCalculateMessage] = useState('');
-
-const handleName = (e) => {
-  setName(e.target.value)
-}
-const handleAge = (e) => {
-  setAge(+e.target.value)
+const handleInput = (setter) => (e) => {
+  setter(e.target.value)
 }
 
-const handleApples = (e) => {
-  setApples(+e.target.value)
+const buttonName = () => {
+  if (name === '') {
+setMessage(`what is your name?`);
+} else if (name === 'Лиза') {
+  setMessage(`Привет, ${name}, ты большая молодец !`);
+} else {
+  setMessage(`Здравствуй, ${name}`);
+}
 }
 
-const handleFriends = (e) => {
-  setFriends(+e.target.value)
+const buttonAge = () => {
+  if (age === '') {
+  setMessageAge(`How old are you?`);
+} else if (age >= 18) {
+  setMessageAge(`Adult`);
+} else {
+  setMessageAge(`Child`);
+}
 }
 
-const handleNameMessage = () => {
-  setNameMessage(
-    name === 'Миха'
-    ? `Здорова ${name}, панки хой!`
-    : name !== ''
-    ? `Привет, ${name}`
-    : `Ты не написал как тебя зовут`
-  );
+const calculator = () => {
+if(apples === '' || friends === '') {
+ setFriendMessage(`enter apples and friends`)
+ return;
 }
-const handleAgeMessage = () => {
-  setAgeMessage(
-    age >= 18
-    ? `Ты взрослый`
-    : `Ты ребенок`
-  )
+let remaining = Number(apples) - Number(friends);
+
+if(remaining === 0) {
+  setFriendMessage(`no apples left`);
+} else if (remaining < 0) {
+  setFriendMessage(`not enough apples`);
+} else {
+  setFriendMessage(`you have ${remaining} apples`);
 }
-
-const calculateApples = () => {
-  if(friends === '' || apples === "") {
-    setCalculateMessage(`Введите количество яблок и друзей`);
-    return
-  }
-
-  let remaining = apples - friends
-
-  if (remaining < 0 ) {
-    setCalculateMessage (`Не хватает яблок`)
-  } else if (remaining === 0) {
-    setCalculateMessage(`Раздал все яблоки`)
-  } else {
-    setCalculateMessage(`у тебя осталось ${remaining} яблок`)
-};
 }
 
-return(
+return (
   <div>
-    <h1>Познкомимся?</h1>
-    <input type = 'text' placeholder = 'как вас зовут?' value = {name} onChange = {handleName}></input>
-    <button onClick={handleNameMessage}>отправить</button>
-    <p>{nameMessage}</p>
-    <input type = 'number' placeholder = 'сколько вам лет?' value = {age} onChange = {handleAge}></input>
-    <button onClick={handleAgeMessage}>отправить</button>
-    <p>{ageMessage}</p>
-    <input type = 'number' placeholder = 'сколько у вас яблок?' value = {apples} onChange = {handleApples}></input>
-    <input type = 'number' placeholder = 'сколько у вас друзей?' value = {friends} onChange = {handleFriends}></input>
-    <button onClick={calculateApples}>отправить</button>
-    <p>{calculateMessage}</p>
-  </div>
-)
+    <input type ='text' placeholder = 'your name' value = {name} onChange = {handleInput(setName)}></input>
+    <button onClick = {buttonName}>send name</button>
+    <p>{message}</p>
 
+    <input type = 'number' placeholder = 'your age' value = {age} onChange = {handleInput(setAge)}></input>
+    <button onClick = {buttonAge}>send age</button>
+    <p>{messageAge}</p>
+
+    <input type = 'number' placeholder = 'apples' value = {apples} onChange = {handleInput(setApples)}></input>
+    <input type = 'number' placeholder = 'friends' value = {friends} onChange = {handleInput(setFriends)}></input>
+    <button onClick = {calculator}>send apples</button>
+    <p>{friendMessage}</p>
+
+    <button onClick = {() => {alert('Hello!')}}>hello button</button>
+  </div>
+);
 }
 export default App
