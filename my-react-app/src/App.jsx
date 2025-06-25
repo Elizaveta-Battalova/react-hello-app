@@ -32,7 +32,12 @@ function App() {
       <input type = 'text'
       placeholder = 'type your task'
       value = {newTask}
-      onChange = {(e) => setNewTask(e.target.value)}></input>
+      onChange = {(e) => setNewTask(e.target.value)}
+      onKeyDown = {(e) => {
+        if(e.key === 'Enter') {
+          addTask()
+        }
+      }}></input>
       <button onClick = {addTask}>add task</button>
 
       <ul>
