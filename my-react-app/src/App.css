@@ -1,70 +1,119 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.inputs-wrapper {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
-ul {
+.input-block {
+  flex: 1 1 300px;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-row button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+}
+
+.input-row button:hover {
+  background: #0056b3;
+}
+
+.input-block ul {
   list-style: none;
   padding: 0;
-  max-width: 600px;
-  margin: 2rem auto;
-  text-align: left;
+  margin: 0;
 }
 
-li {
-  background: #f0f0f0;
-  margin-bottom: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
+.input-block li {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
-  text-align: left;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  background: #f2f2f2;
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 
-li span {
+.input-block li span {
   cursor: pointer;
   flex-grow: 1;
 }
 
-button {
-  background-color: #213547;
+.input-block li button {
+  margin-left: 20px;
+  padding: 4px 8px;
+  font-size: 14px;
+  cursor: pointer;
   border: none;
-  color: white;
-  padding: 0.3rem 0.6rem;
   border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #ff4c4c;
-}
-
-input[type="text"] {
-  padding: 0.5rem;
-  font-size: 1rem;
-  width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin: 0 10px 10px 0;
-}
-
-button.add-task {
-  background-color: #4caf50;
+  background: #dc3545;
   color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-button.add-task:hover {
-  background-color: #3e8e41;
+.input-block li button:hover {
+  background: #a71d2a;
+}
+
+@media (max-width: 600px) {
+  .inputs-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-row input {
+    width: 100%;
+  }
+
+  .input-row button {
+    width: 100%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #121212;
+    color: #eee;
+  }
+
+  .input-row input {
+    background: #1e1e1e;
+    color: #eee;
+    border: 1px solid #333;
+  }
+
+  .input-row button {
+    background: #0d6efd;
+  }
+
+  .input-block li {
+    background: #1e1e1e;
+  }
+
+  .input-block li button {
+    background: #dc3545;
+  }
 }
