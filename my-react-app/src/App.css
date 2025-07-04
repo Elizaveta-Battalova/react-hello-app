@@ -1,119 +1,69 @@
-.inputs-wrapper {
-  display: flex;
-  gap: 40px;
-  flex-wrap: wrap;
+body {
+  font-family: Arial, sans-serif;
+  padding: 40px;
+  background: #f9f9f9;
 }
 
-.input-block {
-  flex: 1 1 300px;
-}
-
-.input-row {
-  display: flex;
-  gap: 10px;
+h1 {
   margin-bottom: 20px;
+  color: #333;
+  text-align: center;
 }
 
-.input-row input {
-  flex: 1;
-  padding: 8px 12px;
+input {
+  padding: 10px 12px;
   font-size: 16px;
+  width: 300px;
   box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin-right: 10px;
 }
 
-.input-row button {
-  padding: 8px 16px;
+button {
+  padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  white-space: nowrap;
+  background: #007bff;
+  color: #fff;
   border: none;
   border-radius: 4px;
-  background: #007bff;
-  color: white;
 }
 
-.input-row button:hover {
+button:hover {
   background: #0056b3;
 }
 
-.input-block ul {
+ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin-top: 30px;
 }
 
-.input-block li {
+li {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: #fff;
+  padding: 12px 16px;
+  border-radius: 4px;
   margin-bottom: 10px;
-  background: #f2f2f2;
-  padding: 8px 12px;
-  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.input-block li span {
-  cursor: pointer;
+li span {
   flex-grow: 1;
-}
-
-.input-block li button {
-  margin-left: 20px;
-  padding: 4px 8px;
-  font-size: 14px;
   cursor: pointer;
-  border: none;
-  border-radius: 4px;
+}
+
+li button {
   background: #dc3545;
-  color: white;
+  padding: 6px 12px;
+  font-size: 14px;
 }
 
-.input-block li button:hover {
-  background: #a71d2a;
+li button:hover {
+  background: #c82333;
 }
-
-@media (max-width: 600px) {
-  .inputs-wrapper {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .input-row {
-    flex-direction: column;
-  }
-
-  .input-row input {
-    width: 100%;
-  }
-
-  .input-row button {
-    width: 100%;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #121212;
-    color: #eee;
-  }
-
-  .input-row input {
-    background: #1e1e1e;
-    color: #eee;
-    border: 1px solid #333;
-  }
-
-  .input-row button {
-    background: #0d6efd;
-  }
-
-  .input-block li {
-    background: #1e1e1e;
-  }
-
-  .input-block li button {
-    background: #dc3545;
-  }
+.completed {
+  background-color: #f0f0f0;
+  color: #666;
 }

@@ -2,178 +2,147 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [actorsList, setActorsList] = useState([]);
-  const [dancersList, setDancersList] = useState([]);
-
-  const [newActorInput, setNewActorInput] = useState("");
-  const [newDancerInput, setNewDancerInput] = useState("");
-
-  const [paidActors, setPaidActors] = useState([]);
-  const [paidDancers, setPaidDancers] = useState([]);
-
-  const [actorsHasLoaded, setActorsHasLoaded] = useState(false);
-  const [dancersHasLoaded, setDancersHasLoaded] = useState(false);
-  const [paidActorsHasLoaded, setPaidActorsHasLoaded] = useState(false);
-  const [paidDancersHasLoaded, setPaidDancersHasLoaded] = useState(false);
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editingTaskText, setEditingTaskText] = useState("");
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [loadedTasks, setLoadedTasks] = useState(false);
 
   useEffect(() => {
-    const savedActors = JSON.parse(localStorage.getItem("actors"));
-    const savedDancers = JSON.parse(localStorage.getItem("dancers"));
-    const savedPaidActors = JSON.parse(localStorage.getItem("paidActors"));
-    const savedPaidDancers = JSON.parse(localStorage.getItem("paidDancers"));
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+    const savedCompletedTasks = JSON.parse(
+      localStorage.getItem("completedTasks")
+    );
 
-    if (savedActors) setActorsList(savedActors);
-    if (savedDancers) setDancersList(savedDancers);
-    if (savedPaidActors) setPaidActors(savedPaidActors);
-    if (savedPaidDancers) setPaidDancers(savedPaidDancers);
+    if (savedTasks) setTasks(savedTasks);
+    if (savedCompletedTasks) setCompletedTasks(savedCompletedTasks);
 
-    setActorsHasLoaded(true);
-    setDancersHasLoaded(true);
-    setPaidActorsHasLoaded(true);
-    setPaidDancersHasLoaded(true);
+    setLoadedTasks(true);
   }, []);
 
   useEffect(() => {
-    if (actorsHasLoaded) {
-      localStorage.setItem("actors", JSON.stringify(actorsList));
+    if (loadedTasks) {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
     }
-  }, [actorsList, actorsHasLoaded]);
+  }, [tasks, loadedTasks]);
 
   useEffect(() => {
-    if (dancersHasLoaded) {
-      localStorage.setItem("dancers", JSON.stringify(dancersList));
+    if (loadedTasks) {
+      localStorage.setItem("completedTasks", JSON.stringify(completedTasks));
     }
-  }, [dancersList, dancersHasLoaded]);
+  }, [completedTasks, loadedTasks]);
 
-  useEffect(() => {
-    if (paidActorsHasLoaded) {
-      localStorage.setItem("paidActors", JSON.stringify(paidActors));
-    }
-  }, [paidActors, paidActorsHasLoaded]);
+  const addTask = () => {
+    const trimmedTask = newTask.trim();
 
-  useEffect(() => {
-    if (paidDancersHasLoaded) {
-      localStorage.setItem("paidDancers", JSON.stringify(paidDancers));
-    }
-  }, [paidDancers, paidDancersHasLoaded]);
+    if (trimmedTask === "") return;
 
-  const addActor = () => {
-    const actor = {
+    const task = {
       id: Date.now(),
-      text: newActorInput,
+      text: trimmedTask,
     };
-    if (newActorInput.trim() !== "") {
-      setActorsList([...actorsList, actor]);
-    }
-    setNewActorInput("");
+
+    setTasks([...tasks, task]);
+    setNewTask("");
   };
 
-  const addDancer = () => {
-    const dancer = {
-      id: Date.now(),
-      text: newDancerInput,
-    };
-    if (newDancerInput.trim() !== "") {
-      setDancersList([...dancersList, dancer]);
-    }
-    setNewDancerInput("");
+  const startEdit = (task) => {
+    setEditingTaskId(task.id);
+    setEditingTaskText(task.text);
   };
 
-  const togglePaidActor = (paidActorId) => {
-    setPaidActors((currentPaidActors) =>
-      currentPaidActors.includes(paidActorId)
-        ? currentPaidActors.filter((id) => id !== paidActorId)
-        : [...currentPaidActors, paidActorId]
+  const saveEdit = () => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === editingTaskId ? { ...task, text: editingTaskText } : task
+      )
+    );
+    setEditingTaskId(null);
+    setEditingTaskText("");
+  };
+
+  const cancelEdit = () => {
+    setEditingTaskId(null);
+    setEditingTaskText("");
+  };
+
+  const toggleCompletedTask = (completedId) => {
+    setCompletedTasks((current) =>
+      current.includes(completedId)
+        ? current.filter((id) => id !== completedId)
+        : [...current, completedId]
     );
   };
 
-  const togglePaidDancer = (paidDancerId) => {
-    setPaidDancers((currentPaidDancers) =>
-      currentPaidDancers.includes(paidDancerId)
-        ? currentPaidDancers.filter((id) => id !== paidDancerId)
-        : [...currentPaidDancers, paidDancerId]
-    );
-  };
-
-  const deleteActor = (actorToDeleteId) => {
-    setActorsList(actorsList.filter((actor) => actor.id !== actorToDeleteId));
-    setPaidActors(paidActors.filter((id) => id !== actorToDeleteId));
-  };
-
-  const deleteDancer = (dancerToDeleteId) => {
-    setDancersList(
-      dancersList.filter((dancer) => dancer.id !== dancerToDeleteId)
-    );
-    setPaidDancers(paidDancers.filter((id) => id !== dancerToDeleteId));
+  const deleteTask = (idToDelete) => {
+    setTasks(tasks.filter((task) => task.id !== idToDelete));
   };
 
   return (
     <div>
-      <h1>Список актеров и танцоров</h1>
-      <p>Тех кто получил оплату - зачеркнуть</p>
-      <div className="inputs-wrapper">
-        <div className="input-block">
-          <div className="input-row">
-            <input
-              type="text"
-              placeholder="Введите ФИО артиста"
-              value={newActorInput}
-              onChange={(e) => setNewActorInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addActor()}
-            />
-            <button onClick={addActor}>Добавить</button>
-          </div>
+      <h1>Список задач</h1>
+      <input
+        type="text"
+        placeholder="Напишите задачу"
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && addTask()}
+      />
+      <button onClick={addTask} style={{ backgroundColor: "green", color: "white" }}>
+        Добавить
+      </button>
 
-          <ul>
-            {actorsList.map((actor) => (
-              <li key={actor.id}>
+      <ul>
+        {tasks.map((task) => (
+          <li
+            key={task.id}
+            className={completedTasks.includes(task.id) ? "completed" : ""}
+          >
+            {task.id === editingTaskId ? (
+              <>
+                <input
+                  type="text"
+                  value={editingTaskText}
+                  onChange={(e) => setEditingTaskText(e.target.value)}
+                />
+                <button onClick={saveEdit} style={{ backgroundColor: "green", color: "white" }}>
+                  Сохранить
+                </button>
+                <button onClick={cancelEdit} style={{ backgroundColor: "gray", color: "white" }}>
+                  Отмена
+                </button>
+              </>
+            ) : (
+              <>
                 <span
-                  onClick={() => togglePaidActor(actor.id)}
+                  onClick={() => toggleCompletedTask(task.id)}
                   style={{
-                    textDecoration: paidActors.includes(actor.id)
+                    textDecoration: completedTasks.includes(task.id)
                       ? "line-through"
                       : "none",
+                    cursor: "pointer",
                   }}
                 >
-                  {actor.text}
-                </span>
-                <button onClick={() => deleteActor(actor.id)}>Удалить</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="input-block">
-          <div className="input-row">
-            <input
-              type="text"
-              placeholder="Введите ФИО танцора"
-              value={newDancerInput}
-              onChange={(e) => setNewDancerInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addDancer()}
-            />
-            <button onClick={addDancer}>Добавить</button>
-          </div>
-
-          <ul>
-            {dancersList.map((dancer) => (
-              <li key={dancer.id}>
-                <span
-                  onClick={() => togglePaidDancer(dancer.id)}
-                  style={{
-                    textDecoration: paidDancers.includes(dancer.id)
-                      ? "line-through"
-                      : "none",
-                  }}
+                  {task.text}
+                </span>{" "}
+                <button
+                  onClick={() => deleteTask(task.id)}
+                  style={{ backgroundColor: "red", color: "white" }}
                 >
-                  {dancer.text}
-                </span>
-                <button onClick={() => deleteDancer(dancer.id)}>Удалить</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+                  Удалить
+                </button>
+                <button
+                  onClick={() => startEdit(task)}
+                  style={{ backgroundColor: "#007bff", color: "white" }}
+                >
+                  Редактировать
+                </button>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
