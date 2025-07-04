@@ -20,9 +20,13 @@ h1 {
 input {
   padding: 10px 12px;
   font-size: 16px;
-  flex: 1 1 auto;
+  width: 300px;
   box-sizing: border-box;
-  min-width: 0;
+  margin-right: 10px;
+  background: #fff; 
+  color: #333; 
+  border: 1px solid #ccc; 
+  border-radius: 4px;
 }
 
 button {
@@ -50,18 +54,18 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
+  background: #fff;
   padding: 12px 16px;
   border-radius: 4px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap;
 }
 
 li span {
   flex-grow: 1;
   cursor: pointer;
   word-break: break-word;
+  color: #333;
 }
 
 li input {

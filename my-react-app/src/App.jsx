@@ -108,6 +108,7 @@ function App() {
             <span onClick = {() => toggleCompletedTask(task.id)}
               style = {{textDecoration: completedTasks.includes(task.id) ? 'line-through' : 'none', cursor: 'pointer'}}>{task.text}</span>
               <button type="button" onClick = {() => startEdit(task)} style={{ backgroundColor: "orange", color: "white" }}>Редактировать</button></>)}
+              <button ензу = "button" onClick = {() => deleteTask(task.id)} style = {{bacgroundColor: "red", color: "white"}}>✗</button>
           </li>
         ))}
       </ul>
