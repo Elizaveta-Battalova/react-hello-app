@@ -82,7 +82,8 @@ function App() {
   return (
     <div>
       <h1>Список задач</h1>
-      <input
+      <div className="input-wrapper">
+       <input
         type="text"
         placeholder="Напишите задачу"
         value={newTask}
@@ -90,8 +91,10 @@ function App() {
         onKeyDown={(e) => e.key === "Enter" && addTask()}
       />
       <button type="button" onClick={addTask} style={{ backgroundColor: "green", color: "white" }}>
-        Добавить
+         ✓
       </button>
+      </div>
+
       <ul>
         {tasks.map((task) => (
           <li key = {task.id}
