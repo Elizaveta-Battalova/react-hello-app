@@ -89,57 +89,22 @@ function App() {
         onChange={(e) => setNewTask(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && addTask()}
       />
-      <button onClick={addTask} style={{ backgroundColor: "green", color: "white" }}>
+      <button type="button" onClick={addTask} style={{ backgroundColor: "green", color: "white" }}>
         Добавить
       </button>
-
       <ul>
         {tasks.map((task) => (
-          <li
-            key={task.id}
-            className={completedTasks.includes(task.id) ? "completed" : ""}
-          >
-            {task.id === editingTaskId ? (
-              <>
-                <input
-                  type="text"
-                  value={editingTaskText}
-                  onChange={(e) => setEditingTaskText(e.target.value)}
-                />
-                <button onClick={saveEdit} style={{ backgroundColor: "green", color: "white" }}>
-                  Сохранить
-                </button>
-                <button onClick={cancelEdit} style={{ backgroundColor: "gray", color: "white" }}>
-                  Отмена
-                </button>
-              </>
-            ) : (
-              <>
-                <span
-                  onClick={() => toggleCompletedTask(task.id)}
-                  style={{
-                    textDecoration: completedTasks.includes(task.id)
-                      ? "line-through"
-                      : "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {task.text}
-                </span>{" "}
-                <button
-                  onClick={() => deleteTask(task.id)}
-                  style={{ backgroundColor: "red", color: "white" }}
-                >
-                  Удалить
-                </button>
-                <button
-                  onClick={() => startEdit(task)}
-                  style={{ backgroundColor: "#007bff", color: "white" }}
-                >
-                  Редактировать
-                </button>
-              </>
-            )}
+          <li key = {task.id}
+          className = {completedTasks.includes(task.id) ? 'completed' : ''}>
+            {task.id === editingTaskId ? (<>
+            <input type = 'text'
+            value = {editingTaskText}
+            onChange = {(e) => setEditingTaskText(e.target.value)}/>
+            <button type="button" onClick = {saveEdit} style={{ backgroundColor: "green", color: "white" }}>Сохранить</button>
+            <button type="button" onClick = {cancelEdit} style={{ backgroundColor: "gray", color: "white" }}>Отмена</button></>) : (<>
+            <span onClick = {() => toggleCompletedTask(task.id)}
+              style = {{textDecoration: completedTasks.includes(task.id) ? 'line-through' : 'none', cursor: 'pointer'}}>{task.text}</span>
+              <button type="button" onClick = {() => startEdit(task)} style={{ backgroundColor: "orange", color: "white" }}>Редактировать</button></>)}
           </li>
         ))}
       </ul>
