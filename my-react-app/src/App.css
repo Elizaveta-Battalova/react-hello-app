@@ -9,7 +9,9 @@ h1 {
   color: #333;
   text-align: center;
 }
-
+h2{
+  border-bottom: '1px solid #000'
+}
 .input-wrapper {
   display: flex;
   gap: 10px;
