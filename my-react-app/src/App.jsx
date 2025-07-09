@@ -79,7 +79,7 @@ function App() {
 
   return (
     <div>
-      <h1>Дневник еды</h1>
+      <h1>Вкусный день</h1>
       <div className="input-wrapper">
         <select
           value={selectedCategory}
