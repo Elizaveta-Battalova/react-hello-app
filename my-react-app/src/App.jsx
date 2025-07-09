@@ -78,7 +78,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className = 'main'>
       <h1>Вкусный день</h1>
       <div className="input-wrapper">
         <select
