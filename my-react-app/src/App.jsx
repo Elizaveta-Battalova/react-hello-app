@@ -1,183 +1,176 @@
-import { useState, useEffect } from "react";
-import "./App.css";
+import { useState, useEffect } from 'react';
+import './App.css';
+
+const weekdays = [
+  'Понедельник',
+  'Вторник',
+  'Среда',
+  'Четверг',
+  'Пятница',
+  'Суббота',
+  'Воскресенье',
+];
+
+const dayHours = {
+  morning: 'Утро',
+  day: 'День',
+  evening: 'Вечер',
+};
 
 function App() {
-  const [meals, setMeals] = useState([]);
-  const [newMeal, setNewMeal] = useState('');
-  const [eatenMeals, setEatenMeals] = useState([]);
-  const [editingMealId, setEditingMealId] = useState(null);
-  const [editingMealText, setEditingMealText] = useState('');
-  const [loadedMeals, setLoadedMeals] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('breakfast');
+  const [tasks, setTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [newTask, setNewTask] = useState('');
+  const [selectedDay, setSelectedDay] = useState('Понедельник');
+  const [selectedHour, setSelectedHour] = useState('morning');
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editingTaskText, setEditingTaskText] = useState('');
+  const [loadedTasks, setLoadedTasks] = useState(false);
 
   useEffect(() => {
     try {
-      const savedMeals = JSON.parse(localStorage.getItem('meals'));
-      const savedEatenMeals = JSON.parse(localStorage.getItem('eatenMeals'));
-
-      if (savedMeals) setMeals(savedMeals);
-      if (savedEatenMeals) setEatenMeals(savedEatenMeals);
+      const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+      const savedCompleted = JSON.parse(localStorage.getItem('completedTasks'));
+      if (savedTasks) setTasks(savedTasks);
+      if (savedCompleted) setCompletedTasks(savedCompleted);
     } catch (e) {
-      console.error('ошибка парсинга localstorage', e);
+      console.error('Ошибка при загрузке', e);
     }
-    setLoadedMeals(true);
+    setLoadedTasks(true);
   }, []);
 
   useEffect(() => {
-    if (loadedMeals) {
-      localStorage.setItem('meals', JSON.stringify(meals));
-      localStorage.setItem('eatenMeals', JSON.stringify(eatenMeals));
-    }
-  }, [meals, eatenMeals, loadedMeals]);
+    if (!loadedTasks) return;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+  }, [tasks, completedTasks, loadedTasks]);
 
-  const addMeal = () => {
-    const trimmedMeal = newMeal.trim();
-    if (trimmedMeal === '') return;
-    const meal = {
+  const addTask = () => {
+    const trimmed = newTask.trim();
+    if (!trimmed) return;
+
+    const task = {
       id: Date.now(),
-      text: trimmedMeal,
-      category: selectedCategory,
+      text: trimmed,
+      week: selectedDay,
+      hours: selectedHour,
     };
-    setMeals([...meals, meal]);
-    setNewMeal('');
+
+    setTasks([...tasks, task]);
+    setNewTask('');
   };
 
-  const startEdit = (meal) => {
-    setEditingMealId(meal.id);
-    setEditingMealText(meal.text);
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((t) => t.id !== id));
+    setCompletedTasks((prev) => prev.filter((tid) => tid !== id));
+  };
+
+  const toggleTask = (id) => {
+    setCompletedTasks((prev) =>
+      prev.includes(id) ? prev.filter((tid) => tid !== id) : [...prev, id]
+    );
+  };
+
+  const startEdit = (task) => {
+    setEditingTaskId(task.id);
+    setEditingTaskText(task.text);
   };
 
   const saveEdit = () => {
-    setMeals((prevMeals) =>
-      prevMeals.map((meal) =>
-        meal.id === editingMealId ? { ...meal, text: editingMealText } : meal
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === editingTaskId ? { ...task, text: editingTaskText } : task
       )
     );
-    setEditingMealId(null);
-    setEditingMealText('');
+    setEditingTaskId(null);
+    setEditingTaskText('');
   };
 
   const cancelEdit = () => {
-    setEditingMealId(null);
-    setEditingMealText('');
-  };
-
-  const toggleEatenMeal = (idToToggle) => {
-    setEatenMeals((prevEatenMeals) =>
-      prevEatenMeals.includes(idToToggle)
-        ? prevEatenMeals.filter((id) => id !== idToToggle)
-        : [...prevEatenMeals, idToToggle]
-    );
-  };
-
-  const deleteMeal = (idToDelete) => {
-    setMeals((prevMeal) => prevMeal.filter((meal) => meal.id !== idToDelete));
-    setEatenMeals((prevEatenMeal) =>
-      prevEatenMeal.filter((id) => id !== idToDelete)
-    );
+    setEditingTaskId(null);
+    setEditingTaskText('');
   };
 
   return (
-    <div className = 'main'>
-      <h1>Вкусный день</h1>
-      <div className="input-wrapper">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          <option value="breakfast">Завтрак</option>
-          <option value="lunch">Обед</option>
-          <option value="dinner">Ужин</option>
-        </select>
+    <div className="main">
+      <h1>Мои задачи</h1>
+
+        <div className="task-bar">
         <input
-          type="text"
-          placeholder="Запишите вашу еду"
-          value={newMeal}
-          onChange={(e) => setNewMeal(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && addMeal()}
+            type="text"
+            placeholder="Напишите задачу"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addTask()}
         />
-        <button type="button" onClick={addMeal} className="btn add-btn">Добавить</button>
-      </div>
 
-      <div>
-        {['breakfast', 'lunch', 'dinner'].map((category) => {
-          const categoryMeals = meals.filter((meal) => meal.category === category);
-          if (categoryMeals.length === 0) return null;
+        <select value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)}>
+            {weekdays.map((day) => (
+            <option key={day} value={day}>{day}</option>
+            ))}
+        </select>
 
-          return (
-            <div key={category}>
-              <h2>
-                {category === 'breakfast' && 'Завтрак'}
-                {category === 'lunch' && 'Обед'}
-                {category === 'dinner' && 'Ужин'}
-              </h2>
-              <ul>
-                {categoryMeals.map((meal) => (
-                  <li
-                    key={meal.id}
-                    className={eatenMeals.includes(meal.id) ? 'completed' : ''}
-                  >
-                    {meal.id === editingMealId ? (
-                      <>
-                        <input
-                          type="text"
-                          value={editingMealText}
-                          onChange={(e) => setEditingMealText(e.target.value)}
-                        />
-                        <button
-                          type="button"
-                          onClick={saveEdit}
-                          className="btn save-btn"
-                        >
-                          ✓
-                        </button>
-                        <button
-                          type="button"
-                          onClick={cancelEdit}
-                          className="btn cancel-btn"
-                        >
-                          ⨉
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <span
-                          onClick={() => toggleEatenMeal(meal.id)}
-                          style={{
-                            textDecoration: eatenMeals.includes(meal.id)
-                              ? 'line-through'
-                              : 'none',
-                          }}
-                        >
-                          {meal.text}{' '}
-                        </span>
-                        {!eatenMeals.includes(meal.id) && (
+        <select value={selectedHour} onChange={(e) => setSelectedHour(e.target.value)}>
+            {Object.entries(dayHours).map(([key, label]) => (
+            <option key={key} value={key}>{label}</option>
+            ))}
+        </select>
+
+        <button onClick={addTask} className="btn add-btn">Добавить</button>
+        </div>
+
+
+
+      {weekdays.map((day) => {
+        const tasksForDay = tasks.filter(task => task.week === day);
+        if (tasksForDay.length === 0) return null;
+
+        return (
+          <div key={day} className = 'card'>
+            <h2>{day}</h2>
+            {Object.entries(dayHours).map(([hourKey, hourLabel]) => {
+              const tasksForHour = tasksForDay.filter(task => task.hours === hourKey);
+              if (tasksForHour.length === 0) return null;
+
+              return (
+                <div key={hourKey}>
+                  <h3>{hourLabel}</h3>
+                  <ul>
+                    {tasksForHour.map(task => (
+                      <li key={task.id}>
+                        {task.id === editingTaskId ? (
                           <>
-                            <button
-                              type="button"
-                              onClick={() => startEdit(meal)}
-                              className="btn edit-btn"
-                            >
-                              Ред.
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => deleteMeal(meal.id)}
-                              className="btn delete-btn"
-                            >
-                              ⨉
-                            </button>
+                            <input
+                              type="text"
+                              value={editingTaskText}
+                              onChange={(e) => setEditingTaskText(e.target.value)}
+                            />
+                            <button onClick={saveEdit} className="btn save-btn">Сохранить</button>
+                            <button onClick={cancelEdit} className="btn cancel-btn">Отмена</button>
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              onClick={() => toggleTask(task.id)}
+                              style={{
+                                textDecoration: completedTasks.includes(task.id) ? 'line-through' : 'none',
+                                cursor: 'pointer',
+                              }}>
+                              {task.text}
+                            </span>
+                            <button onClick={() => startEdit(task)} className="btn edit-btn">✏️</button>
+                            <button onClick={() => deleteTask(task.id)} className="btn delete-btn">🗑️</button>
                           </>
                         )}
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 }
